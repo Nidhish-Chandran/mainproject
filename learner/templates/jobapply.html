@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>Apply Job</title>
+    </head>
+    <body>
+        <h1>Apply Job</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">submit</button>
+        </form>
+
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </body>
+</html>

@@ -1,0 +1,140 @@
+
+
+
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        #root {
+            width: 90vw;
+            height: 80vh;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .button-container {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+
+    </div>
+
+    <!-- Add the 'Join Now' button -->
+
+    <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+    <script>
+    window.onload = function () 
+    {
+        function getUrlParams(url) {
+            let urlStr = url.split('?')[1];
+            const urlSearchParams = new URLSearchParams(urlStr);
+            const result = Object.fromEntries(urlSearchParams.entries());
+            return result;
+        }
+
+        const roomID = getUrlParams(window.location.href)['roomID'] || (Math.floor(Math.random() * 10000) + "");
+        console.log(roomID);
+        const userID = Math.floor(Math.random() * 10000) + "";
+        const userName = "userName" + userID;
+        const appID = 1061854884;
+        const serverSecret = "6b53ef56841f81eec9b7e4bb2d5c0db5";
+        const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
+
+        const zp = ZegoUIKitPrebuilt.create(kitToken);
+        zp.joinRoom({
+            container: document.querySelector("#root"),
+            sharedLinks: [{
+                name: 'Personal link',
+                url: window.location.protocol + '//' + window.location.host + window.location.pathname + '?roomID=' + roomID,
+            }],
+            scenario: {
+                mode: ZegoUIKitPrebuilt.VideoConference,
+            },
+            turnOnMicrophoneWhenJoining: true,
+            turnOnCameraWhenJoining: true,
+            showMyCameraToggleButton: true,
+            showMyMicrophoneToggleButton: true,
+            showAudioVideoSettingsButton: true,
+            showScreenSharingButton: true,
+            showTextChat: true,
+            showUserList: true,
+            maxUsers: 50,
+            layout: "Auto",
+            showLayoutButton: true,
+        });
+
+        // Handle the 'Join Now' button click event
+        document.getElementById("joinNowBtn").onclick = function () {
+            // Get the generated URL
+            const generatedUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + '?roomID=' + roomID;
+
+            // Get the appointment ID passed from the view (assuming it's embedded in the page as a data attribute)
+            const appointmentId = {{ id.pk }};  // Django variable for the appointment's pk (ID)
+
+            // Send an AJAX request to Django backend to save the URL
+            fetch(`/save_url/${appointmentId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',  // Include CSRF token for security
+                },
+                body: JSON.stringify({
+                    url: generatedUrl,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("URL saved successfully!");
+                    alert("Video link saved successfully!"); 
+                } else {
+                    console.error("Error saving URL");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        };
+    }
+    </script>
+      <center>  <button id="joinNowBtn" style="background-color: rgb(0, 234, 255);">Save Video Link</button></center>
+
+</body>
+</html>
