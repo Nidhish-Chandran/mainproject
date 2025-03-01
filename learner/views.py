@@ -435,7 +435,6 @@ def students_applied_for_mentorclass(request):
     mentor_id = request.session['mentor_id']
     mentor = mentors.objects.get(loginid=mentor_id)
     applied_students = mentorclass.objects.filter(Mentor_id=mentor).select_related('student_id__student')
-
     return render(request, 'mentorstudentlist.html', {'students': applied_students})
 
 

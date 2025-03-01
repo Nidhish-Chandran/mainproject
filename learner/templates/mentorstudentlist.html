@@ -70,7 +70,7 @@
                                         <td><button ><a href="{% url 'studentapprove' student.id  %}">Approve</a></td>
                                         <td>Rejected</td>
                                         {% endif %}
-                                        <td><button><a href="{% url 'videoclass' student.id %}">Go live</a></button></td>
+                                        <td><button><a href="{% url 'videoclass' student.Mentor_id.id %}">Go live</a></button></td>
                                     </tr>
                                     {% empty %}
                                     <tr><td colspan="4">No students have applied yet.</td></tr>
