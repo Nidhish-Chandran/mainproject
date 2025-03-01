@@ -474,8 +474,7 @@ def cancel_pending_class(request,id):
 
 def videoconference(request,id):
     student = get_object_or_404(mentorclass,id=id)
-
-    return render(request,'videoconference.html',{'id':student})
+    return render(request,'videoconference.html',{'id' :student})
 
 # def enrollstudent(request,id):
 #     stud = get_object_or_404(mentorclass,id=id)
