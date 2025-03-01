@@ -496,7 +496,7 @@ def videoconference(request,id):
 
 #         return JsonResponse({'success': False, 'message': 'No URL provided'}, status=400)
 
-#     return JsonResponse({'success': False, 'message': 'Invalid request'}, 
+#     return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
 
 
 
